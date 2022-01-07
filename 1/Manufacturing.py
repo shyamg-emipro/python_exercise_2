@@ -68,7 +68,13 @@ while True:
 
     option = int(input("Select and option to Continue:  "))
     if option == 1:
-        man.purchase_raw_material({'wheels': int(input("Wheels:  ")), 'chain': int(input("Chain:  ")), 'handle': int(input("Handle-Bar:  ")), 'frame': int(input("Frame:  ")), 'gear': int(input("Gear:  "))})
+        man.purchase_raw_material({
+            'wheels': int(input("Wheels:  ")),
+            'chain': int(input("Chain:  ")),
+            'handle': int(input("Handle-Bar:  ")),
+            'frame': int(input("Frame:  ")),
+            'gear': int(input("Gear:  "))})
+
     elif option == 2:
         man.produce(int(input("Enter no of product to be produced:  ")))
     elif option == 3:
