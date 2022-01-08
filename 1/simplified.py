@@ -1,12 +1,11 @@
 class Manufacturing:
-    product_qty = 0
 
     def __init__(self, raw_material, product_name, ratio_qty):
         # This function initializes the properties of the class
         # raw_material is a dict that should have raw material name as Key and raw_material qty as Value
         # product_name
         # ratio_qty is a dict that should have name of raw material as Key and raw material required to build 1 product as a value
-
+        self.product_qty = 0
         self.raw_material = raw_material
         self.product_name = product_name
         self.ratio_qty = ratio_qty
@@ -49,7 +48,7 @@ class Manufacturing:
 
 man = Manufacturing(
     10,
-    'bycycle',
+    'bicycle',
     2
 )
 

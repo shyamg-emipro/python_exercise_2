@@ -34,7 +34,7 @@ class InventoryManagement:
 
 
 inventory_management = InventoryManagement(
-    "Bycycle",
+    "Bicycle",
     15
 )  # make object of InventoryManagement and Enters the initial values
 

@@ -56,7 +56,7 @@ class Manufacturing:
 
 man = Manufacturing(
     {'wheels': 10, 'chain': 5, 'handle': 5, 'frame': 5, 'gear': 5},
-    'bycycle',
+    'bicycle',
     {'wheels': 2, 'chain': 1, 'handle': 1, 'frame': 1, 'gear': 2}
 )
 
