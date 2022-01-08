@@ -5,6 +5,7 @@ class Manufacturing:
         # raw_material is a dict that should have raw material name as Key and raw_material qty as Value
         # product_name
         # ratio_qty is a dict that should have name of raw material as Key and raw material required to build 1 product as a value
+
         self.product_qty = 0
         self.raw_material = raw_material
         self.product_name = product_name
@@ -42,6 +43,7 @@ class Manufacturing:
     def purchase_raw_material(self, new_raw_material):
         # Purchase new Raw Material
         # Loop through passed dict and add value of each item in respective raw_material item value
+
         self.raw_material += new_raw_material
         print("Material purchased successfully")
 
