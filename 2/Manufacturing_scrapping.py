@@ -24,27 +24,17 @@ class Manufacturing:
         self.product_qty += no_of_products  # Increase product count
         print("\n\nProduct Produced Successfully")  # Success msg
 
-    def display_raw_material_stock(self):
-        # Display Raw Material Quantity
-        # Loop Through raw_material to display qty of each item
 
-        print("\n\nRaw Material", "   qty")
-        print("________________________")
-        print("{:<18}{:<18}".format("Wheels", self.raw_material))
-
-    def display_final_product_stock(self):
-        # Display Product name using product_name
-        # Display Product Quantity using product_qty
-
-        print("\n\nProduct Name        qty")
-        print("________________________")
-        print("{:<18}{:<18}".format(self.product_name, str(self.product_qty)))
+class Purchase(Manufacturing):
 
     def purchase_raw_material(self, new_raw_material):
         # Purchase new Raw Material
         # Loop through passed dict and add value of each item in respective raw_material item value
         self.raw_material += new_raw_material
         print("Material purchased successfully")
+
+
+class Scrapping(Manufacturing):
 
     def scrap_the_raw_material(self, no_of_raw_material):
         if self.raw_material >= no_of_raw_material:
@@ -61,7 +51,29 @@ class Manufacturing:
             print("There are no Products available in the stock!")
 
 
-man = Manufacturing(
+class Product(Purchase, Scrapping):
+
+    def __init__(self, raw_material, product_name, ratio_qty):
+        Manufacturing.__init__(self, raw_material, product_name, ratio_qty)
+
+    def display_raw_material_stock(self):
+        # Display Raw Material Quantity
+        # Loop Through raw_material to display qty of each item
+
+        print("\n\nRaw Material", "   qty")
+        print("________________________")
+        print("{:<18}{:<18}".format("Wheels", self.raw_material))
+
+    def display_final_product_stock(self):
+        # Display Product name using product_name
+        # Display Product Quantity using product_qty
+
+        print("\n\nProduct Name        qty")
+        print("________________________")
+        print("{:<18}{:<18}".format(self.product_name, str(self.product_qty)))
+
+
+man = Product(
     10,
     'bycycle',
     2
