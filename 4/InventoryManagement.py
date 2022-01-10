@@ -9,7 +9,7 @@ class InventoryManagement:
         # product dictionary contains {'price': <price>, 'quantity': <quantity>}
 
         self.product = {}
-        for val in range(0, len(product)):
+        for val in range(len(product)):
             product[val]['subtotal'] = product[val]['price'] * product[val]['quantity']
             self.product[val + 1] = product[val]
         print("\nInitially available products Entered through constructor.")
