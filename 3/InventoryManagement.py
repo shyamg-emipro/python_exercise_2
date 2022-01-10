@@ -50,10 +50,12 @@ while True:
     option = int(input("Choose the option:  "))
 
     if option == 1:
-        inventory_management.purchase_product(int(input("Enter no. of product you want to purchase: ")))
+        no_of_product = int(input("Enter no. of product you want to purchase: "))
+        inventory_management.purchase_product(no_of_product)
 
     elif option == 2:
-        inventory_management.sell_product(int(input("Enter no. of product you want to sale: ")))
+        no_of_product = int(input("Enter no. of product you want to sale: "))
+        inventory_management.sell_product(no_of_product)
 
     elif option == 3:
         inventory_management.display_product_qty()

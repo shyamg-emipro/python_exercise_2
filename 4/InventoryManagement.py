@@ -13,6 +13,7 @@ class InventoryManagement:
             product[val]['subtotal'] = product[val]['price'] * product[val]['quantity']
             self.product[val + 1] = product[val]
         print("\nInitially available products Entered through constructor.")
+        self.total_product_quantity = sum([value['quantity'] for key, value in self.product.items()])
         print(self.product)
 
     def purchase_product(self, product):
@@ -30,25 +31,32 @@ class InventoryManagement:
         # Sell the product and deduct no_product from the product_qty
 
         first_product = self.product[next(iter(self.product))]
-        if first_product['quantity'] == 0:
-            self.product.pop(next(iter(self.product)))
-            first_product = self.product[next(iter(self.product))]
-        if first_product['quantity'] >= no_of_product:
-            first_product['quantity'] -= no_of_product
-            first_product['subtotal'] = first_product['price'] * first_product["quantity"]
-            self.display_product_qty()
+
+        while self.total_product_quantity >= no_of_product:
+            if first_product['quantity'] == 0:
+                self.product.pop(next(iter(self.product)))
+                first_product = self.product[next(iter(self.product))]
+            elif first_product['quantity'] >= no_of_product:
+                first_product['quantity'] -= no_of_product
+                first_product['subtotal'] = first_product['price'] * first_product["quantity"]
+                self.total_product_quantity = sum([y['quantity'] for x, y in self.product.items()])
+                break
+            else:
+                no_of_product -= first_product['quantity']
+                first_product['quantity'] = 0
         else:
             print("\nNot enough product quantities to sell!")
+        self.display_product_qty()
 
     def display_product_qty(self):
         # Shows available product quantity
 
         print("Total available products in the Inventory")
         print(self.product)
-        first_product = self.product[next(iter(self.product))]
         print("\n\nProduct Price          qty")
         print("___________________________")
-        print("{:<18}{:<18}".format(first_product['price'], first_product['quantity']))
+        for no, product_details in self.product.items():
+            print("{:<18}{:<18}".format(product_details['price'], product_details['quantity']))
 
     def all_products_valuation(self):
         # shows valuation of all products
@@ -83,10 +91,13 @@ while True:
     option = int(input("Choose the option:  "))
 
     if option == 1:
-        inventory_management.purchase_product({'price': int(input("price: ")), 'quantity': int(input("quantity: "))})
+        price = int(input("price: "))
+        quantity = int(input("quantity: "))
+        inventory_management.purchase_product({'price': price, 'quantity': quantity})
 
     elif option == 2:
-        inventory_management.sell_product(int(input("Enter no. of product you want to sale: ")))
+        sale_no_of_product = int(input("Enter no. of product you want to sale: "))
+        inventory_management.sell_product(sale_no_of_product)
 
     elif option == 3:
         inventory_management.display_product_qty()

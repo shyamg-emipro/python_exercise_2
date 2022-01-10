@@ -73,7 +73,7 @@ class Product(Purchase, Scrapping):
         print("{:<18}{:<18}".format(self.product_name, str(self.product_qty)))
 
 
-man = Product(
+manufacturing_scrapping = Product(
     10,
     'bicycle',
     2
@@ -91,18 +91,29 @@ while True:
 
     option = int(input("Select and option to Continue:  "))
     if option == 1:
-        man.purchase_raw_material(int(input("Wheels:  ")))
+        wheels = int(input("Wheels:  "))
+        manufacturing_scrapping.purchase_raw_material(wheels)
+
     elif option == 2:
-        man.produce(int(input("Enter no of product to be produced:  ")))
+        no_of_product = int(input("Enter no of product to be produced:  "))
+        manufacturing_scrapping.produce(no_of_product)
+
     elif option == 3:
-        man.display_raw_material_stock()
+        manufacturing_scrapping.display_raw_material_stock()
+
     elif option == 4:
-        man.display_final_product_stock()
+        manufacturing_scrapping.display_final_product_stock()
+
     elif option == 5:
-        man.scrap_the_raw_material(int(input("Enter no. of Raw Materials to be scrapped: ")))
+        no_of_raw_material = int(input("Enter no. of Raw Materials to be scrapped: "))
+        manufacturing_scrapping.scrap_the_raw_material(no_of_raw_material)
+
     elif option == 6:
-        man.scrap_the_product(int(input("Enter no. of Products to be scrapped: ")))
+        no_of_product = int(input("Enter no. of Products to be scrapped: "))
+        manufacturing_scrapping.scrap_the_product(no_of_product)
+
     elif option == 7:
         break
+
     else:
         print("Please Select valid Option")
