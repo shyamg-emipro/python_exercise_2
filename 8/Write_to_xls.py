@@ -66,19 +66,10 @@ for order_id, values in customer_data.items():
         ])
 
 workbook = Workbook()
+
 worksheet = workbook.create_sheet("Customer Orders", 0)
 
-
-worksheet['A1'] = "Order No"
-worksheet['B1'] = "Customer"
-worksheet['C1'] = "SKU"
-worksheet['D1'] = "QTY"
-worksheet['E1'] = "Price"
-worksheet['F1'] = "Address1"
-worksheet['G1'] = "Address2"
-worksheet['H1'] = "Zipcode"
-worksheet['I1'] = "City"
-worksheet['J1'] = "Country"
+worksheet.append(fields)
 
 for row in rows:
     worksheet.append(row)
