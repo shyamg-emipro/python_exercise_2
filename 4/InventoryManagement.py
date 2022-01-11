@@ -21,9 +21,9 @@ class InventoryManagement:
         # Purchases and increase product quantity
 
         # product dictionary contains {'price': <price>, 'quantity': <quantity>}
-
+        next_product_key = list(self.product.keys())[len(self.product) - 1] + 1
         product['subtotal'] = product['price'] * product['quantity']
-        self.product[len(self.product) + 1] = product
+        self.product[next_product_key] = product
         print(self.product)
 
     def sell_product(self, no_of_product):
@@ -63,13 +63,11 @@ class InventoryManagement:
         # subtotal_sum sum of all subtotals all available products
 
         subtotal_sum = 0
-        qty_sum = 0
         for key, value in self.product.items():
             subtotal_sum += value['subtotal']
-            qty_sum += value['quantity']
 
         # valuation
-        valuation = subtotal_sum / qty_sum
+        valuation = subtotal_sum / self.total_product_quantity
         print("Valuation :  ", valuation)
 
 
