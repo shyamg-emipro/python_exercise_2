@@ -7,11 +7,10 @@ customer_data = {}
 with open(file_name, 'r') as csv_file:
     csv_reader = csv.reader(csv_file)
     fields = next(csv_reader)
-    csv_data = list(csv_reader)
     countries = {'USA': 'United States of America', 'AU': 'Australia', 'DE': 'Germany', 'ES': 'Spain',
                  'UK': 'United Kingdom', 'IT': 'Italy'}
 
-    for row in csv_data:
+    for row in csv_reader:
         if not customer_data.get(row[0]):
             customer_data.update({
                 row[0]: {
