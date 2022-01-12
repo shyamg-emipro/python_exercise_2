@@ -1,6 +1,7 @@
 from datetime import date
-class Sales_Transaction:
 
+
+class SalesTransaction:
     def __init__(self):
         self.product_details = {}
         self.product_stock = {}
@@ -15,6 +16,7 @@ class Sales_Transaction:
             'product_unit_price': int(input("Product Unit Price:  ")),
             'product_cost_price': int(input("Product Cost Price:  "))
         }
+        product_types = {1: "stockable", 2: "consumable", 3: "service"}
         while True:
             print("""
             Enter Product Type
@@ -23,14 +25,13 @@ class Sales_Transaction:
                 3. service
                 4. Exit
             """)
-            product_type = input("Enter product type or press 4 to Exit:")
-            if product_type == '4':
+            product_type = int(input("Enter product type or press 4 to Exit:  "))
+            if product_type == 4:
                 return False
-            elif product_type in ('stockable', 'consumable', 'service'):
+            elif product_types[product_type]:
                 break
             else:
                 print("Enter valid product type! ")
-                continue
         user_input.update({
             'product_type': product_type,
             'stock': int(input("Enter Stock:  "))
@@ -39,28 +40,29 @@ class Sales_Transaction:
 
     def manage_product(self):
         user_input = self.prepare_product()
-        self.create_product(user_input)
+        if user_input:
+            self.create_product(user_input)
+        else:
+            return False
 
     def create_product(self, user_input):
         new_sku = "PRD" + str(len(self.product_details) + 1)
         self.product_stock[new_sku] = user_input.pop('stock')
         self.product_details[new_sku] = user_input
-
         self.display_products()
         return new_sku
 
     def display_products(self):
-        product_sku_list = list(self.product_stock.keys())
         print("{:<15}{:<20}{:<10}".format("Product Id", "Product Name", "Stock"))
         print("==========================================")
-        for sku in product_sku_list:
-            print("{:<15}{:<20}{:<10}".format(sku, self.product_details[sku]['name'], self.product_stock[sku]))
+        for sku, value in self.product_details.items():
+            print("{:<15}{:<20}{:<10}".format(sku, value['name'], self.product_stock[sku]))
 
     def update_product_stock(self):
         self.display_products()
-        sku = input("Enter product sku id")
+        sku = input("Enter product sku id:  ")
         if sku in list(self.product_stock.keys()):
-            self.product_stock[sku] += int(input("Add stock quantity to ", sku, " :  "))
+            self.product_stock[sku] += int(input("Enter Additional stock quantity:  "))
             self.display_products()
             return sku
         else:
@@ -96,12 +98,11 @@ class Sales_Transaction:
         self.customer_address[new_customer_id] = user_input
         return new_customer_id
 
-    def display_customer(self):
-        customer_id_list = list(self.customer_details.keys())
+    def display_customers(self):
         print("{:<15}{:<20}".format("Customer Id", "Customer Name"))
-        print("==========================================")
-        for customer_id in customer_id_list:
-            print("{:<15}{:<20}".format(customer_id, self.product_details[customer_id]['name']))
+        print("==============================")
+        for customer_id, value in self.customer_details.items():
+            print("{:<15}{:<20}".format(customer_id, value['name']))
 
     def prepare_order_lines(self):
         orderlines = []
@@ -111,31 +112,39 @@ class Sales_Transaction:
                 2. Exit
             """)
             option = int(input("Select option:  "))
-            if option == 1:
-                self.display_products()
-                sku = input("Enter Product Id:  ")
-                if sku in list(self.product_stock.keys()):
-                    product_quantity = int(input("Enter Product Quantity:  "))
-                    product_unit_price = self.product_details[sku]['product_unit_price']
-                    orderlines.append({
-                        'product_sku': sku,
-                        'unit_price': product_unit_price,
-                        'quantity': product_quantity,
-                        'subtotal': product_quantity * product_unit_price,
-                        'state': 'draft'
-                    })
-                    continue
+            if option != 1:
+                break
+            self.display_products()
+            sku = input("Enter Product Id:  ")
+            if sku in list(self.product_stock.keys()):
+                product_unit_price = self.product_details[sku]['product_unit_price']
+                product_quantity = int(input("Enter Product Quantity:  "))
+                if self.product_stock[sku] >= product_quantity:
+                    self.product_stock[sku] -= product_quantity
+                    for product in orderlines:
+                        if sku == product['product_sku']:
+                            product['quantity'] += product_quantity
+                            product['unit_price'] += product_unit_price
+                            product['subtotal'] += product_unit_price * product_quantity
+                            break
+                    else:
+                        orderlines.append({
+                            'product_sku': sku,
+                            'unit_price': product_unit_price,
+                            'quantity': product_quantity,
+                            'subtotal': product_quantity * product_unit_price,
+                            'state': 'draft'
+                        })
                 else:
-                    print("Enter Valid Product Id!")
-                    continue
+                    print("Not enough product quantity available! ")
             else:
-                if len(orderlines) == 0:
-                    return False
-                else:
-                    return orderlines
+                print("Enter Valid Product Id!")
+        if len(orderlines) == 0:
+            return False
+        else:
+            return orderlines
 
     def prepare_sales_order(self):
-        order_id = 'SO' + str(len(self.order_details) + 1)
         user_input = {}
         while True:
             print("""
@@ -144,19 +153,17 @@ class Sales_Transaction:
             """)
             option = int(input("Select option: "))
             if option == 1:
-                self.display_customer()
+                self.display_customers()
                 customer_id = input("Enter Customer Id:  ")
                 if customer_id in list(self.customer_details.keys()):
                     break
                 else:
                     print("Enter Valid Customer Id!")
-                    continue
             else:
                 return False
 
-        if self.prepare_order_lines():
-            orderlines = self.prepare_order_lines()
-        else:
+        orderlines = self.prepare_order_lines()
+        if not orderlines:
             return False
 
         order_date = date(
@@ -164,12 +171,12 @@ class Sales_Transaction:
             int(input("Enter Month (mm):")),
             int(input("Enter Day (dd):"))
         )
-        user_input[order_id] = {
+        user_input = {
             'customer': customer_id,
             'order_lines': orderlines,
             'order_date': order_date,
             'state': 'draft',
-            'order_total_amount': sum(product['subtotal'] for product in orderlines)
+            'order_total_amount': sum([product['subtotal'] for product in orderlines])
         }
         return user_input
 
@@ -177,11 +184,69 @@ class Sales_Transaction:
         user_input = self.prepare_sales_order()
         self.create_sales_order(user_input)
 
+    def display_sales_orders(self):
+        print("{:<18}{:<18}{:<18}{:<18}".format("Order Id", "Customer Id", "Date", "Total Amount"))
+        print("==================================================================")
+        for order_id, value in self.order_details.items():
+            print("{:<18}{:<18}{:18}{:18}".format(order_id, value['customer'], str(value['order_date']), str(value['order_total_amount'])))
+
     def create_sales_order(self, user_input):
-        self.order_details = user_input
+        order_id = 'SO' + str(len(self.order_details) + 1)
+        self.order_details[order_id] = user_input
+        return order_id
+
+    def generate_invoice(self, order_id):
+        order = self.order_details[order_id]
+        customer_details = self.customer_details[order['customer']]
+        customer_address = self.customer_address[order['customer']]
+        orderlines = order['order_lines']
+        print("{:<35}{:<35}".format("Order No: " + str(order_id), "Order Date: " + str(order['order_date'])))
+        print("{:<35}".format("Order Status: " + order['state']))
+        print("{:<35}{:<35}".format("Customer: " + order['customer'] + "  " + customer_details['name'], customer_address['address1']))
+        print("{:<35}{:<35}".format(customer_details['phone'], customer_address['address2']))
+        print("{:<35}{:<35}".format(customer_details['email'], customer_address['city']))
+        print("{:<35}{:<35}".format(" ", customer_address['zipcode']))
+        print("{:<35}{:<35}".format(" ", customer_address['country']))
+
+        print("\n\n{:<25}{:<25}{:<25}{:<25}".format("Product Name", "Product Price", "Product Quantity", "Subtotal"))
+        print("==========================================================================================")
+        for product in orderlines:
+            product_name = self.product_details[product['product_sku']]['name']
+            product_quantity = str(product['unit_price'])
+            product_price = str(product['quantity'])
+            product_subtotal = str(product['subtotal'])
+            print("{:<25}{:<25}{:<25}{:<25}".format(product_name, product_price, product_quantity, product_subtotal))
+
+    def change_order_state(self):
+        self.display_sales_orders()
+        order_id = input("Enter Order id:  ")
+        if order_id in list(self.order_details.keys()):
+            order_states = {'draft': 1, 'confirm': 2, 'done': 3, 'cancel': 4}
+            current_order = self.order_details[order_id]
+            current_state = order_states[current_order['state']]
+            print("""
+                1. Set to Draft
+                2. Set to Confirm
+                3. Set to Done
+                4. Set to Cancel
+            """)
+            state = int(input("Select order state: "))
+            if state > current_state:
+                key_list = list(order_states.keys())
+                value_list = list(order_states.values())
+                position = value_list.index(state)
+                for product in current_order['order_lines']:
+                    product['state'] = key_list[position]
+                self.order_details[order_id]['state'] = key_list[position]
+                if state == 3:
+                    self.generate_invoice(order_id)
+            else:
+                print("Sorry! ")
+                print("Your Order is in", current_state, " State,")
+                print("And Cannot be shifted to ", state, " State!")
 
 
-sales_transaction = Sales_Transaction()
+sales_transaction = SalesTransaction()
 
 while True:
     print("""
@@ -189,8 +254,31 @@ while True:
         2. Update Product Stock
         3. Add Customer
         4. Generate Sales Order
+        5. Change Order State
+        6. Display All Products
+        7. Display All Customers
+        8. Display All Orders
+        9. Exit
     """)
     option = int(input("Select option: "))
 
     if option == 1:
         sales_transaction.manage_product()
+    elif option == 2:
+        sales_transaction.update_product_stock()
+    elif option == 3:
+        sales_transaction.manage_customer()
+    elif option == 4:
+        sales_transaction.generate_sales_order()
+    elif option == 5:
+        sales_transaction.change_order_state()
+    elif option == 6:
+        sales_transaction.display_products()
+    elif option == 7:
+        sales_transaction.display_customers()
+    elif option == 8:
+        sales_transaction.display_sales_orders()
+    elif option == 9:
+        break
+    else:
+        print("Select valid option!  ")
