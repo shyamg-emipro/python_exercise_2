@@ -56,17 +56,24 @@ class Sales_Order(SalesTransaction):
         delivery_id = input("Enter Delivery Id:  ")
         if delivery_id in list(self.delivery_order.keys()):
             delivery_status = {1: 'validate', 2: 'cancel'}
+            current_delivery = self.delivery_order[delivery_id]
+            current_state = list(delivery_status.values()).index(current_delivery['state']) + 1
             print("""
                 1. Validate
                 2. Cancel
             """)
             state = int(input("Select State:  "))
-            if state == 1:
-                self.validate_delivery_order(delivery_id)
-            elif state == 2:
-                self.cancel_delivery_order(delivery_id)
+            if state > current_state:
+                if state == 1:
+                    self.validate_delivery_order(delivery_id)
+                elif state == 2:
+                    self.cancel_delivery_order(delivery_id)
+                else:
+                    print("Enter Valid State!")
             else:
-                print("Enter Valid State!")
+                print("Sorry! ")
+                print("Your Order is in", current_delivery['state'], " State,")
+                print("And Cannot be shifted to ", delivery_status[state], " State!")
         else:
             print("Please, Enter valid Delivery Id!")
 

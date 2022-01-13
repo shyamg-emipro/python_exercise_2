@@ -120,7 +120,6 @@ class SalesTransaction:
                 product_unit_price = self.product_details[sku]['product_unit_price']
                 product_quantity = int(input("Enter Product Quantity:  "))
                 if self.product_stock[sku] >= product_quantity:
-                    # self.product_stock[sku] -= product_quantity
                     for product in orderlines:
                         if sku == product['product_sku']:
                             product['quantity'] += product_quantity
