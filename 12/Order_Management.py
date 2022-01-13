@@ -250,17 +250,17 @@ class SalesTransaction:
             current_order = self.order_details[order_id]
             current_state = list(order_states.values()).index(current_order['state']) + 1
             print("""
-                   1. Set to Draft
-                   2. Set to Confirm
-                   3. Set to Done
-                   4. Set to Cancel
-               """)
+                1. Set to Draft
+                2. Set to Confirm
+                3. Set to Done
+                4. Set to Cancel
+            """)
             state = int(input("Select order state: "))
             if state > current_state:
                 if state == 1:
                     self.set_order_state_to_draft(current_order)
                 if state == 2:
-                    self.set_order_state_to_confirm(current_order)
+                    self.set_order_state_to_confirm(order_id)
                 if state == 3:
                     self.set_order_state_to_done(order_id, current_order)
                 if state == 4:
@@ -271,41 +271,3 @@ class SalesTransaction:
                 print("Sorry! ")
                 print("Your Order is in", current_order['state'], " State,")
                 print("And Cannot be shifted to ", order_states[state], " State!")
-
-
-sales_transaction = SalesTransaction()
-
-while True:
-    print("""
-        1. Add Product
-        2. Update Product Stock
-        3. Add Customer
-        4. Generate Sales Order
-        5. Change Order State
-        6. Display All Products
-        7. Display All Customers
-        8. Display All Orders
-        9. Exit
-    """)
-    option = int(input("Select option: "))
-
-    if option == 1:
-        sales_transaction.manage_product()
-    elif option == 2:
-        sales_transaction.update_product_stock()
-    elif option == 3:
-        sales_transaction.manage_customer()
-    elif option == 4:
-        sales_transaction.generate_sales_order()
-    elif option == 5:
-        sales_transaction.change_order_state()
-    elif option == 6:
-        sales_transaction.display_products()
-    elif option == 7:
-        sales_transaction.display_customers()
-    elif option == 8:
-        sales_transaction.display_sales_orders()
-    elif option == 9:
-        break
-    else:
-        print("Select valid option!  ")
