@@ -231,10 +231,10 @@ class SalesTransaction:
                 4. Set to Cancel
             """)
             state = int(input("Select order state: "))
+            key_list = list(order_states.keys())
+            value_list = list(order_states.values())
+            position = value_list.index(state)
             if state > current_state:
-                key_list = list(order_states.keys())
-                value_list = list(order_states.values())
-                position = value_list.index(state)
                 for product in current_order['order_lines']:
                     product['state'] = key_list[position]
                 self.order_details[order_id]['state'] = key_list[position]
@@ -242,8 +242,8 @@ class SalesTransaction:
                     self.generate_invoice(order_id)
             else:
                 print("Sorry! ")
-                print("Your Order is in", current_state, " State,")
-                print("And Cannot be shifted to ", state, " State!")
+                print("Your Order is in", current_order['state'], " State,")
+                print("And Cannot be shifted to ", key_list[position], " State!")
 
 
 sales_transaction = SalesTransaction()
