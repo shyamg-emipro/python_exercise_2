@@ -43,20 +43,14 @@ def leave_hours(day):
     return day['no_of_hours']
 
 
-def total_attendance_hours(attendances):
-    return reduce(lambda a, b: a + b, list(map(attendance_hours, attendances)))
-
-
-def total_leave_hours(leaves):
-    return reduce(lambda a, b: a + b, list(map(leave_hours, leaves)))
-
-
 def emp_details(emp):
     employee = emp_dict[emp]
+    total_attendance_hours = sum(list(map(attendance_hours, employee['attendances'])))
+    total_leave_hours = sum(list(map(leave_hours, employee['leaves'])))
     return {'employee_id': emp,
             'employee_name': employee['name'],
-            'total_attendance_hours': total_attendance_hours(employee['attendances']),
-            'total_leave_days': total_leave_hours(employee['leaves'])
+            'total_attendance_hours': total_attendance_hours,
+            'total_leave_days': total_leave_hours
             }
 
 

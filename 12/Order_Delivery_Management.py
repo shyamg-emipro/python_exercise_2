@@ -47,6 +47,9 @@ class Sales_Order(SalesTransaction):
 
     def cancel_delivery_order(self, delivery_order_id):
         current_delivery_order = self.delivery_order[delivery_order_id]
+        order_id = current_delivery_order['sales_order']
+        current_order = self.order_details[order_id]
+        super(Sales_Order, self).set_order_state_to_cancel(current_order)
         for product in current_delivery_order['stock_moves']:
             product['state'] = 'cancel'
         current_delivery_order['state'] = 'cancel'
@@ -55,9 +58,9 @@ class Sales_Order(SalesTransaction):
         self.display_delivery_order()
         delivery_id = input("Enter Delivery Id:  ")
         if delivery_id in list(self.delivery_order.keys()):
-            delivery_status = {1: 'validate', 2: 'cancel'}
+            delivery_status = {0: 'confirm', 1: 'done', 2: 'cancel'}
             current_delivery = self.delivery_order[delivery_id]
-            current_state = list(delivery_status.values()).index(current_delivery['state']) + 1
+            current_state = list(delivery_status.values()).index(current_delivery['state'])
             print("""
                 1. Validate
                 2. Cancel
