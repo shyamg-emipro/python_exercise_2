@@ -66,12 +66,17 @@ def get_hours(days):
     return sum(days['hours'])
 
 
+def remaining_hours(days):
+    return 8 - sum(days['hours'])
+
+
 def emp_attendance_record(emp):
     employee = emp_dict[emp]
     return {
         emp: {
             'date': list(map(get_dates, filter_days(employee['attendances']))),
-            'total_hrs': list(map(get_hours, filter_days(employee['attendances'])))
+            'total_hrs': list(map(get_hours, filter_days(employee['attendances']))),
+            'remaining_hrs': list(map(remaining_hours, filter_days(employee['attendances'])))
         }
     }
 

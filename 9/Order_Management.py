@@ -245,31 +245,32 @@ class SalesTransaction:
         self.display_sales_orders()
         order_id = input("Enter Order id:  ")
         if order_id in list(self.order_details.keys()):
-            order_states = {1: 'draft', 2: 'confirm', 3: 'done', 4: 'cancel'}
+            order_states = {1: 'cancel', 2: 'draft', 3: 'confirm', 4: 'done'}
             current_order = self.order_details[order_id]
             current_state = list(order_states.values()).index(current_order['state']) + 1
             print("""
-                   1. Set to Draft
-                   2. Set to Confirm
-                   3. Set to Done
-                   4. Set to Cancel
+                   1. Set to Cancel
+                   2. Set to Draft
+                   3. Set to Confirm
+                   4. Set to Done
                """)
             state = int(input("Select order state: "))
-            if state > current_state:
+            if current_state != 4:
                 if state == 1:
-                    self.set_order_state_to_draft(current_order)
-                if state == 2:
-                    self.set_order_state_to_confirm(current_order)
-                if state == 3:
-                    self.set_order_state_to_done(order_id, current_order)
-                if state == 4:
                     self.set_order_state_to_cancel(current_order)
-            elif state == 1 and current_state == 4:
-                self.set_order_state_to_draft(current_order)
-            else:
+                if current_state + 1 == state:
+                    if state == 2:
+                        self.set_order_state_to_draft(current_order)
+                    if state == 3:
+                        self.set_order_state_to_confirm(current_order)
+                    if state == 4:
+                        self.set_order_state_to_done(order_id, current_order)
+            elif current_state == 4:
                 print("Sorry! ")
                 print("Your Order is in", current_order['state'], " State,")
                 print("And Cannot be shifted to ", order_states[state], " State!")
+            else:
+                print("Please, Select right State!")
 
 
 sales_transaction = SalesTransaction()
